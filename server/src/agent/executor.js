@@ -23,13 +23,13 @@ export async function executePlan(plan) {
     }
 
     case 'update': {
-      const filter = buildFilter(p.filter || {});
+      const filter = await resolveExactName(col, buildFilter(p.filter || {}));
       const updateFields = { ...(p.update || {}), updatedAt: new Date().toISOString() };
       return await mcpUpdateMany(col, filter, { $set: updateFields });
     }
 
     case 'delete': {
-      const filter = buildFilter(p.filter || p);
+      const filter = await resolveExactName(col, buildFilter(p.filter || p));
       return await mcpDeleteMany(col, filter);
     }
 
@@ -73,6 +73,15 @@ function buildFilter(params) {
     }
   }
   return filter;
+}
+
+// For update/delete: resolve a name string to the exact stored name via a
+// case-insensitive find, so the MCP mutation tools never see a $regex filter.
+async function resolveExactName(col, filter) {
+  if (!filter.name || typeof filter.name !== 'string') return filter;
+  const { docs } = await mcpFind(col, { name: { $regex: filter.name, $options: 'i' } }, 1);
+  if (!docs.length) return filter;
+  return { ...filter, name: docs[0].name };
 }
 
 function buildDoc(params) {

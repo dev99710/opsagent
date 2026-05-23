@@ -1,6 +1,6 @@
 import { getMCPClient } from './client.js';
 
-const DB = 'test';
+const DB = 'opsagent';
 
 async function callTool(name, args) {
   const client = await getMCPClient();

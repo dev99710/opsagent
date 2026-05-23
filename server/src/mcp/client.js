@@ -17,12 +17,17 @@ export async function getMCPClient() {
   if (initPromise) return initPromise;
 
   initPromise = (async () => {
+    const rawUri = process.env.MONGODB_URI || '';
+    const mcpUri = rawUri.includes('/opsagent')
+      ? rawUri
+      : rawUri.replace(/\/?\?/, '/opsagent?');
+
     const transport = new StdioClientTransport({
       command: 'node',
       args: [MCP_SERVER],
       env: {
         ...process.env,
-        MDB_MCP_CONNECTION_STRING: process.env.MONGODB_URI,
+        MDB_MCP_CONNECTION_STRING: mcpUri,
       },
     });
 
@@ -36,7 +41,7 @@ export async function getMCPClient() {
     // Explicitly connect to MongoDB so the session is ready before any tool call
     const connectResult = await client.callTool({
       name: 'connect',
-      arguments: { connectionStringOrClusterName: process.env.MONGODB_URI },
+      arguments: { connectionStringOrClusterName: mcpUri },
     });
     const connectText = connectResult.content?.[0]?.text ?? '';
     if (connectResult.isError) {
