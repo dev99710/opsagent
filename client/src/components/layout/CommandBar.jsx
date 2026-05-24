@@ -62,8 +62,13 @@ export default function CommandBar({ connStatus, onReconnect }) {
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-amber-50 border border-amber-200 text-amber-700 hover:bg-amber-100 transition-all"
             >
               <RefreshCcw size={11} />
-              <span className="hidden sm:inline">Reconnect</span>
+              <span className="hidden sm:inline">Retry</span>
             </button>
+          ) : connStatus === 'connecting' ? (
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-[#E5DDD0] bg-[#FAF7F2]">
+              <RefreshCcw size={11} className="text-[#A8927D] animate-spin" />
+              <span className="hidden sm:inline text-[11px] text-[#78716C]">Checking…</span>
+            </div>
           ) : (
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-[#E5DDD0] bg-[#FAF7F2]">
               <span className={`w-1.5 h-1.5 rounded-full ${DOT[connStatus] ?? DOT.connecting}`} />

@@ -36,7 +36,7 @@ function useIsMobile() {
 
 export default function App() {
   const [terminalOpen, setTerminalOpen] = useState(false);
-  const conn = useConnection();
+  const [conn, recheck] = useConnection();
   const lowStockCount = useLowStockAlerts();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
@@ -77,7 +77,7 @@ export default function App() {
       {/* ── Top command bar ── */}
       <CommandBar
         connStatus={conn}
-        onReconnect={() => window.location.reload()}
+        onReconnect={recheck}
       />
 
       {/* ── Tab nav ── */}
