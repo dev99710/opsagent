@@ -4,10 +4,11 @@ import { Send, Sparkles, X } from 'lucide-react';
 import { sendCommand } from '../../api.js';
 
 const CHIPS = [
-  { label: 'Low stock',      cmd: 'Show low stock items' },
-  { label: 'Pending orders', cmd: 'Show pending orders' },
-  { label: 'Summary',        cmd: 'Give me a business summary' },
-  { label: 'Appointments',   cmd: "Show today's appointments" },
+  { label: 'Low stock items',      cmd: 'Show low stock items' },
+  { label: 'Pending orders',       cmd: 'Show pending orders' },
+  { label: "Today's appointments", cmd: "Show today's appointments" },
+  { label: 'Business summary',     cmd: 'Give me a business summary' },
+  { label: 'Top selling items',    cmd: 'Show top selling items' },
 ];
 
 function ChatBubble({ entry }) {
@@ -153,7 +154,7 @@ export default function AgentTerminal({ onDataChange, onClose }) {
         </div>
         <div>
           <p className="text-sm font-semibold text-[#111827] leading-none">AI Agent</p>
-          <p className="text-[10px] text-[#9CA3AF] mt-0.5">Ask anything about your operations</p>
+          <p className="text-[10px] text-[#9CA3AF] mt-0.5">Powered by Gemini + MongoDB MCP</p>
         </div>
         {onClose && (
           <button
@@ -218,7 +219,7 @@ export default function AgentTerminal({ onDataChange, onClose }) {
           onChange={e => setInput(e.target.value)}
           onKeyDown={onKey}
           disabled={loading}
-          placeholder="Ask about your business…"
+          placeholder="Try: show low stock items, summarize today, pending orders…"
           className="flex-1 bg-[#F3F4F6] border border-[#E5E7EB] rounded-xl px-4 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] outline-none focus:border-indigo-300 focus:bg-white transition-all disabled:opacity-40"
         />
         <button
