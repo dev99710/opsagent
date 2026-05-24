@@ -76,7 +76,21 @@ export default function AnalyticsPage() {
 
   const { revenueByDay = [], ordersByStatus = [], inventoryByCategory = [], stockLevels = [] } = data ?? {};
 
+  const totalRevenue   = revenueByDay.reduce((s, d) => s + (d.revenue ?? 0), 0);
+  const totalOrders    = ordersByStatus.reduce((s, d) => s + (d.value ?? 0), 0);
+  const completedOrders = ordersByStatus
+    .filter(d => d.name === 'completed' || d.name === 'fulfilled')
+    .reduce((s, d) => s + (d.value ?? 0), 0);
+  const avgOrderValue    = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+  const completionRate   = totalOrders > 0 ? Math.round((completedOrders / totalOrders) * 100) : 0;
+
   const axisStyle = { fill: '#9CA3AF', fontSize: 11 };
+
+  const PILLS = [
+    { label: 'Total Revenue',    value: `$${totalRevenue.toLocaleString(undefined, { maximumFractionDigits: 0 })}` },
+    { label: 'Avg Order Value',  value: `$${avgOrderValue.toFixed(2)}` },
+    { label: 'Completion Rate',  value: `${completionRate}%` },
+  ];
 
   return (
     <div className="flex-1 overflow-y-auto scrollbar-thin px-4 sm:px-6 py-4 sm:py-6 bg-[#F8F9FA]">
@@ -84,13 +98,21 @@ export default function AnalyticsPage() {
         <div className="mb-7">
           <h1 className="text-xl font-bold text-[#111827]">Analytics</h1>
           <p className="text-sm text-[#6B7280] mt-0.5">Business performance overview</p>
+          <div className="flex flex-wrap gap-2 mt-3">
+            {PILLS.map(p => (
+              <span key={p.label} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-[#E5E7EB] text-xs text-[#6B7280] shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+                <span className="text-[#9CA3AF]">{p.label}:</span>
+                <span className="font-semibold text-[#111827]">{p.value}</span>
+              </span>
+            ))}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
           {/* Revenue by day */}
           <ChartCard title="Revenue by Day" subtitle="Last 30 days">
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer width="100%" height={250}>
               <LineChart data={revenueByDay}>
                 <XAxis dataKey="date" tick={axisStyle} axisLine={false} tickLine={false} interval="preserveStartEnd" />
                 <YAxis tick={axisStyle} axisLine={false} tickLine={false} width={52} tickFormatter={v => `$${v}`} />
@@ -102,7 +124,7 @@ export default function AnalyticsPage() {
 
           {/* Orders by status */}
           <ChartCard title="Orders by Status" subtitle="Current distribution">
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
                   data={ordersByStatus}
@@ -128,9 +150,9 @@ export default function AnalyticsPage() {
 
           {/* Top 5 products by category */}
           <ChartCard title="Top 5 Categories by Value" subtitle="Total inventory value ($)">
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer width="100%" height={250}>
               <BarChart data={inventoryByCategory}>
-                <XAxis dataKey="category" tick={{ ...axisStyle, fontSize: 10 }} axisLine={false} tickLine={false} />
+                <XAxis dataKey="category" tick={{ ...axisStyle, fontSize: 10 }} axisLine={false} tickLine={false} angle={-35} height={60} interval={0} textAnchor="end" />
                 <YAxis tick={axisStyle} axisLine={false} tickLine={false} width={56} tickFormatter={v => `$${v}`} />
                 <Tooltip {...TOOLTIP_STYLE} formatter={v => [`$${v}`, 'Value']} />
                 <Bar dataKey="value" radius={[4, 4, 0, 0]} name="Value">
@@ -144,7 +166,7 @@ export default function AnalyticsPage() {
 
           {/* Stock levels — top 10 by quantity */}
           <ChartCard title="Stock Levels" subtitle="Top 10 items by quantity">
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer width="100%" height={250}>
               <BarChart data={stockLevels} layout="vertical">
                 <XAxis type="number" tick={axisStyle} axisLine={false} tickLine={false} />
                 <YAxis dataKey="name" type="category" tick={axisStyle} axisLine={false} tickLine={false} width={90} />
