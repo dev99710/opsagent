@@ -79,8 +79,8 @@ function KPICard({ label, raw, fmt, icon: Icon, color, sub, trend, delay = 0 }) 
       <div className="flex items-start justify-between">
         <div>
           <p className="text-xs font-semibold text-[#78716C] uppercase tracking-wider">{label}</p>
-          <p className={`text-2xl font-bold mt-1.5 tabular-nums ${VALCOL[color]}`}>{fmt(counted)}</p>
-          {sub && <p className="text-[11px] text-[#A8927D] mt-1">{sub}</p>}
+          <p className={`text-4xl font-bold mt-1.5 tabular-nums ${VALCOL[color]}`}>{fmt(counted)}</p>
+          {sub && <p className="text-sm text-gray-500 mt-1">{sub}</p>}
         </div>
         <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${ICONBG[color]}`}>
           <Icon size={16} />
@@ -162,7 +162,7 @@ export default function Dashboard() {
                 <KPICard label="Inventory Value"     raw={Math.round(kpis.totalInventoryValue ?? 0)} fmt={v => `$${v.toLocaleString()}`} icon={DollarSign}    color="indigo"  sub="Total stock value"     trend={4.2}  delay={0} />
                 <KPICard label="Pending Orders"      raw={kpis.pendingOrders ?? 0}                   fmt={v => v}                        icon={ShoppingCart}  color="amber"   sub="Awaiting fulfillment"  trend={-2.1} delay={0.06} />
                 <KPICard label="Today's Appointments" raw={kpis.todayAppointments ?? 0}              fmt={v => v}                        icon={Calendar}      color="emerald" sub="Scheduled for today"               delay={0.12} />
-                <KPICard label="Low Stock Items"     raw={kpis.lowStockCount ?? 0}                   fmt={v => v}                        icon={AlertTriangle} color="red"     sub="Below 10 units"                    delay={0.18} />
+                <KPICard label="Low Stock Items"     raw={kpis.lowStockCount ?? 0}                   fmt={v => v}                        icon={(kpis.lowStockCount ?? 0) === 0 ? CheckCircle : AlertTriangle} color={(kpis.lowStockCount ?? 0) === 0 ? 'emerald' : 'red'} sub={(kpis.lowStockCount ?? 0) === 0 ? 'All stocked' : 'Below 10 units'} delay={0.18} />
               </>
             )}
           </div>
