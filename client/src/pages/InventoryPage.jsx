@@ -93,10 +93,22 @@ function SkeletonCard() {
   );
 }
 
+/* ── Category pill colors ────────────────────────────────── */
+const CAT_PILL = {
+  'dairy':               'bg-blue-50 text-blue-700 border-blue-200',
+  'beverages':           'bg-purple-50 text-purple-700 border-purple-200',
+  'grains':              'bg-yellow-50 text-yellow-700 border-yellow-200',
+  'fruits & vegetables': 'bg-green-50 text-green-700 border-green-200',
+  'oils':                'bg-orange-50 text-orange-700 border-orange-200',
+};
+const catPill = (cat) => CAT_PILL[(cat ?? '').toLowerCase()] ?? 'bg-gray-100 text-gray-600 border-gray-200';
+
 /* ── Inventory card ─────────────────────────────────────── */
 function InventoryCard({ item, onClick, index }) {
-  const pct = Math.min(100, Math.round((Number(item.quantity) / (item.reorderLevel || 50)) * 100));
-  const low = Number(item.quantity) < 10;
+  const pct    = Math.min(100, Math.round((Number(item.quantity) / (item.reorderLevel || 50)) * 100));
+  const qty    = Number(item.quantity);
+  const lowWarn = qty < 20;  // red top border
+  const lowBadge = qty < 10; // "Low stock" text
 
   return (
     <motion.div
@@ -104,37 +116,50 @@ function InventoryCard({ item, onClick, index }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05, duration: 0.35 }}
       onClick={onClick}
-      className={`bg-white border rounded-xl p-4 cursor-pointer hover:shadow-md transition-all ${
-        low
-          ? 'border-red-200 hover:border-red-300'
-          : 'border-[#E5DDD0] hover:border-[#C4B5A0]'
+      className={`bg-white rounded-xl border cursor-pointer transition-shadow hover:shadow-md ${
+        lowWarn
+          ? 'border-t-2 border-t-red-400 border-x-[#E5DDD0] border-b-[#E5DDD0]'
+          : 'border-[#E5DDD0]'
       }`}
     >
-      <div className="flex items-start justify-between mb-3">
-        <DonutChart pct={pct} />
-        <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#F2EDE4] text-[#78716C] border border-[#E5DDD0] ml-2 text-right leading-5">
-          {item.category}
-        </span>
-      </div>
-      <p className="text-sm font-bold text-[#1C1917] truncate">{item.name}</p>
-      {item.supplier && (
-        <p className="text-[11px] text-[#A8927D] mt-0.5 truncate">{item.supplier}</p>
-      )}
-      <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-[#F2EDE4]">
-        <span className={`text-sm font-bold ${low ? 'text-red-600' : 'text-[#1C1917]'}`}>
-          {item.quantity}
-          <span className="text-[11px] font-normal text-[#A8927D] ml-1">{item.unit}</span>
-        </span>
-        <span className="text-sm font-semibold text-[#78716C]">
-          ${Number(item.price || 0).toFixed(2)}
-        </span>
-      </div>
-      {low && (
-        <div className="mt-2 flex items-center gap-1 text-[10px] font-semibold text-red-500">
-          <AlertTriangle size={9} />
-          Low stock
+      <div className="p-4 flex flex-col gap-3">
+        {/* Top: donut + category pill */}
+        <div className="flex items-start justify-between">
+          <DonutChart pct={pct} />
+          <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ml-2 leading-5 ${catPill(item.category)}`}>
+            {item.category || 'Other'}
+          </span>
         </div>
-      )}
+
+        {/* Name + supplier */}
+        <div>
+          <p className="text-base font-bold text-[#1C1917] truncate">{item.name}</p>
+          {item.supplier && (
+            <p className="text-[11px] text-[#A8927D] mt-0.5 truncate">{item.supplier}</p>
+          )}
+        </div>
+
+        {/* Stock row */}
+        <div className="flex items-center gap-1.5">
+          <span className={`text-sm font-bold tabular-nums ${lowBadge ? 'text-red-600' : 'text-[#1C1917]'}`}>
+            {item.quantity}
+          </span>
+          <span className="text-[11px] text-[#A8927D]">{item.unit}</span>
+          {lowBadge && (
+            <span className="ml-auto flex items-center gap-0.5 text-[9px] font-bold text-red-600 bg-red-50 border border-red-200 rounded-full px-1.5 py-0.5">
+              <AlertTriangle size={8} />LOW
+            </span>
+          )}
+        </div>
+
+        {/* Bottom: price + status */}
+        <div className="flex items-center justify-between pt-2.5 border-t border-[#F2EDE4]">
+          <span className="text-sm font-bold text-[#1C1917]">
+            ${Number(item.price || 0).toFixed(2)}
+          </span>
+          {item.status && <StatusBadge value={item.status} />}
+        </div>
+      </div>
     </motion.div>
   );
 }
@@ -451,13 +476,13 @@ export default function InventoryPage() {
           /* ── Card grid view ── */
           <div className="p-4 sm:p-6">
             {loading ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {Array.from({ length: 12 }).map((_, i) => <SkeletonCard key={i} />)}
               </div>
             ) : filtered.length === 0 ? (
               <div className="flex items-center justify-center h-48 text-[#A8927D] text-sm">No items found</div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filtered.map((item, i) => (
                   <InventoryCard
                     key={item._id ?? i}
