@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Download, RefreshCcw, List, LayoutGrid, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Download, RefreshCcw, List, LayoutGrid, ChevronLeft, ChevronRight, Calendar, CheckCircle } from 'lucide-react';
 import { fetchCollection } from '../api.js';
 import StatusBadge from '../components/shared/StatusBadge.jsx';
 import Drawer from '../components/shared/Drawer.jsx';
@@ -158,6 +158,46 @@ export default function AppointmentsPage() {
               );
             })}
           </div>
+
+          {/* Upcoming this week */}
+          {(() => {
+            const weekApts = weekDates
+              .flatMap(date => aptsForDate(date).map(a => ({ ...a, _isoDate: date.toISOString().split('T')[0] })))
+              .sort((a, b) => {
+                const da = `${a._isoDate}${a.time ?? ''}`;
+                const db = `${b._isoDate}${b.time ?? ''}`;
+                return da > db ? 1 : -1;
+              });
+            return (
+              <div className="mt-5 min-w-[700px]">
+                <p className="text-xs font-semibold text-[#6B7280] uppercase tracking-wider mb-3">Upcoming this week</p>
+                {weekApts.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-10 gap-3 bg-white border border-[#E5E7EB] rounded-xl">
+                    <Calendar size={28} className="text-[#D1D5DB]" />
+                    <p className="text-sm text-[#9CA3AF]">No appointments this week</p>
+                  </div>
+                ) : (
+                  <div className="bg-white border border-[#E5E7EB] rounded-xl overflow-hidden">
+                    {weekApts.map((a, i) => (
+                      <button
+                        key={a._id ?? i}
+                        onClick={() => setSelected(a)}
+                        className="w-full flex items-center gap-4 px-5 py-3 border-b border-[#F3F4F6] last:border-0 hover:bg-[#F8F9FA] transition-colors text-left"
+                      >
+                        <span className={`w-2 h-2 rounded-full shrink-0 ${STATUS_DOT[a.status] ?? STATUS_DOT.scheduled}`} />
+                        <span className="text-sm font-semibold text-[#111827] flex-1 truncate">{a.customer}</span>
+                        <span className="text-xs text-[#6B7280] truncate">{a.purpose}</span>
+                        <span className="text-xs text-[#9CA3AF] shrink-0 ml-auto pl-4">
+                          {new Date(a._isoDate).toLocaleDateString('en', { weekday: 'short', month: 'short', day: 'numeric' })}
+                          {a.time ? ` · ${a.time}` : ''}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
         </div>
       ) : (
         <div className="flex-1 overflow-auto scrollbar-thin">

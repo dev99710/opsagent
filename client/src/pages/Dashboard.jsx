@@ -257,7 +257,13 @@ export default function Dashboard() {
                   ))}
                 </div>
               ) : lowStock.length === 0 ? (
-                <p className="px-5 py-10 text-center text-sm text-[#A8927D]">All items well stocked</p>
+                <div className="flex flex-col items-center justify-center py-12 gap-3">
+                  <div className="w-12 h-12 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center">
+                    <CheckCircle size={24} className="text-emerald-500" />
+                  </div>
+                  <p className="text-sm font-semibold text-[#1C1917]">All items well stocked</p>
+                  <p className="text-xs text-[#A8927D]">No items below threshold</p>
+                </div>
               ) : (
                 <div className="divide-y divide-[#F2EDE4]">
                   {lowStock.map((item, i) => {
