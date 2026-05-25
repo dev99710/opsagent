@@ -42,10 +42,10 @@ export default function CommandBar({ connStatus, onReconnect }) {
           <span className="hidden sm:block text-sm font-bold text-[#1C1917] tracking-tight">OpsAgent</span>
         </div>
 
-        {/* Centre search trigger */}
+        {/* Centre search trigger — hidden on mobile */}
         <button
           onClick={() => setOpen(true)}
-          className="flex-1 max-w-md mx-auto flex items-center gap-2.5 h-9 px-3.5 rounded-xl bg-[#FAF7F2] border border-[#E5DDD0] text-[#A8927D] hover:border-[#C4B5A0] hover:bg-[#F5F0E8] transition-all"
+          className="hidden sm:flex flex-1 max-w-md mx-auto items-center gap-2.5 h-9 px-3.5 rounded-xl bg-[#FAF7F2] border border-[#E5DDD0] text-[#A8927D] hover:border-[#C4B5A0] hover:bg-[#F5F0E8] transition-all"
         >
           <Search size={13} className="shrink-0" />
           <span className="text-xs flex-1 text-left truncate">Search or ask anything…</span>

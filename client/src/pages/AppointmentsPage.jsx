@@ -43,7 +43,7 @@ const STATUS_DOT = {
 export default function AppointmentsPage() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [view, setView] = useState('week');
+  const [view, setView] = useState(() => typeof window !== 'undefined' && window.innerWidth < 640 ? 'list' : 'week');
   const [weekAnchor, setWeekAnchor] = useState(new Date());
   const [selected, setSelected] = useState(null);
 
@@ -85,7 +85,7 @@ export default function AppointmentsPage() {
             <button onClick={nextWeek} className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#E5E7EB] text-[#6B7280] hover:bg-[#F3F4F6] hover:text-[#374151] transition-all">
               <ChevronRight size={14} />
             </button>
-            <span className="text-xs text-[#6B7280] font-medium ml-1">{weekLabel}</span>
+            <span className="text-[10px] sm:text-xs text-[#6B7280] font-medium ml-1">{weekLabel}</span>
           </div>
         )}
 
@@ -121,7 +121,7 @@ export default function AppointmentsPage() {
         <div className="flex-1 flex items-center justify-center text-[#9CA3AF] text-sm">Loading appointments…</div>
       ) : view === 'week' ? (
         <div className="flex-1 overflow-auto scrollbar-thin p-6 bg-[#F8F9FA]">
-          <div className="grid grid-cols-7 gap-3 min-w-[700px]">
+          <div className="hidden sm:grid grid-cols-7 gap-3 min-w-[700px]">
             {weekDates.map((date, i) => {
               const iso = date.toISOString().split('T')[0];
               const isToday = iso === today;
@@ -169,7 +169,7 @@ export default function AppointmentsPage() {
                 return da > db ? 1 : -1;
               });
             return (
-              <div className="mt-5 min-w-[700px]">
+              <div className="mt-5 sm:min-w-[700px]">
                 <p className="text-xs font-semibold text-[#6B7280] uppercase tracking-wider mb-3">Upcoming this week</p>
                 {weekApts.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-10 gap-3 bg-white border border-[#E5E7EB] rounded-xl">

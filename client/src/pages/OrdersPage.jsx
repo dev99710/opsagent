@@ -151,12 +151,12 @@ export default function OrdersPage() {
 
       {/* Kanban board */}
       {loading ? (
-        <div className="flex-1 overflow-x-auto scrollbar-thin p-5 bg-[#FAF7F2]">
-          <div className="flex gap-4 h-full min-w-max">
+        <div className="flex-1 overflow-y-auto sm:overflow-x-auto scrollbar-thin p-5 bg-[#FAF7F2]">
+          <div className="flex flex-col sm:flex-row gap-4 sm:h-full">
             {COLUMNS.map(col => {
               const s = COL_STYLE[col];
               return (
-                <div key={col} className="flex flex-col w-72 shrink-0">
+                <div key={col} className="flex flex-col w-full sm:w-72 sm:shrink-0">
                   <div className="flex items-center gap-2 mb-3 px-1">
                     <span className={`w-2 h-2 rounded-full ${s.dot}`} />
                     <span className={`text-xs font-bold uppercase tracking-wider ${s.head}`}>{col}</span>
@@ -171,8 +171,8 @@ export default function OrdersPage() {
           </div>
         </div>
       ) : (
-        <div className="flex-1 overflow-x-auto scrollbar-thin p-5 bg-[#FAF7F2]">
-          <div className="flex gap-4 h-full min-w-max">
+        <div className="flex-1 overflow-y-auto sm:overflow-x-auto scrollbar-thin p-5 bg-[#FAF7F2]">
+          <div className="flex flex-col sm:flex-row gap-4 sm:h-full">
             {COLUMNS.map(col => {
               const s = COL_STYLE[col];
               const colOrders = byStatus(col);
@@ -181,7 +181,7 @@ export default function OrdersPage() {
               return (
                 <div
                   key={col}
-                  className="flex flex-col w-72 shrink-0"
+                  className="flex flex-col w-full sm:w-72 sm:shrink-0"
                   onDragOver={e => onDragOver(e, col)}
                   onDragLeave={() => setDragOver(null)}
                   onDrop={() => onDrop(col)}

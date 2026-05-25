@@ -34,7 +34,7 @@ function ChartCard({ title, subtitle, children }) {
   return (
     <div className="bg-white border border-[#E5E7EB] rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
       <div className="px-5 py-4 border-b border-[#F3F4F6]">
-        <h3 className="text-sm font-semibold text-[#111827]">{title}</h3>
+        <h3 className="text-xs sm:text-sm font-semibold text-[#111827]">{title}</h3>
         {subtitle && <p className="text-xs text-[#9CA3AF] mt-0.5">{subtitle}</p>}
       </div>
       <div className="p-5">{children}</div>

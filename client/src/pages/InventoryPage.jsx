@@ -337,7 +337,7 @@ export default function InventoryPage() {
         {/* Category filter */}
         <select
           value={category} onChange={e => setCategory(e.target.value)}
-          className="hidden sm:block bg-white border border-[#E5DDD0] rounded-lg px-3 py-2 text-sm text-[#374151] outline-none cursor-pointer hover:border-[#C4B5A0] transition-all"
+          className="bg-white border border-[#E5DDD0] rounded-lg px-3 py-2 text-sm text-[#374151] outline-none cursor-pointer hover:border-[#C4B5A0] transition-all"
         >
           {categories.map(c => <option key={c}>{c}</option>)}
         </select>
@@ -378,7 +378,7 @@ export default function InventoryPage() {
             onClick={() => setAddOpen(true)}
             className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold transition-all shadow-sm"
           >
-            <Plus size={13} />Add Item
+            <Plus size={13} /><span className="hidden sm:inline">Add Item</span>
           </button>
         </div>
       </div>
@@ -388,6 +388,7 @@ export default function InventoryPage() {
         {view === 'table' ? (
           /* ── Table view ── */
           loading ? (
+            <div className="overflow-x-auto">
             <table className="w-full text-sm border-collapse">
               <thead>
                 <tr className="bg-[#FAF7F2] border-b border-[#E5DDD0]">
@@ -401,9 +402,11 @@ export default function InventoryPage() {
               </thead>
               <tbody>{Array.from({ length: 10 }).map((_, i) => <SkeletonRow key={i} />)}</tbody>
             </table>
+            </div>
           ) : filtered.length === 0 ? (
             <div className="flex items-center justify-center h-48 text-[#A8927D] text-sm">No items found</div>
           ) : (
+            <div className="overflow-x-auto">
             <table className="w-full text-sm border-collapse">
               <thead>
                 <tr className="bg-[#FAF7F2] border-b border-[#E5DDD0]">
@@ -471,6 +474,7 @@ export default function InventoryPage() {
                 })}
               </tbody>
             </table>
+            </div>
           )
         ) : (
           /* ── Card grid view ── */

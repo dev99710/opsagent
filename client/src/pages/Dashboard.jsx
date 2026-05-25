@@ -79,7 +79,7 @@ function KPICard({ label, raw, fmt, icon: Icon, color, sub, trend, delay = 0 }) 
       <div className="flex items-start justify-between">
         <div>
           <p className="text-xs font-semibold text-[#78716C] uppercase tracking-wider">{label}</p>
-          <p className={`text-4xl font-bold mt-1.5 tabular-nums ${VALCOL[color]}`}>{fmt(counted)}</p>
+          <p className={`text-2xl sm:text-4xl font-bold mt-1.5 tabular-nums ${VALCOL[color]}`}>{fmt(counted)}</p>
           {sub && <p className="text-sm text-gray-500 mt-1">{sub}</p>}
         </div>
         <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${ICONBG[color]}`}>
@@ -192,6 +192,7 @@ export default function Dashboard() {
               ) : recentOrders.length === 0 ? (
                 <p className="px-5 py-10 text-center text-sm text-[#A8927D]">No orders yet</p>
               ) : (
+                <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="bg-[#FAF7F2]">
@@ -221,6 +222,7 @@ export default function Dashboard() {
                     ))}
                   </tbody>
                 </table>
+                </div>
               )}
             </div>
 
