@@ -4,12 +4,22 @@ import { join, dirname } from 'path';
 config({ path: join(dirname(fileURLToPath(import.meta.url)), '../../.env') });
 import express from 'express';
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 import { connectDB, getDB } from './db/client.js';
 import agentRoutes from './routes/agent.js';
 import { parseSearchQuery } from './agent/gemini.js';
 import inventoryRoutes from './routes/inventory.js';
 import ordersRoutes from './routes/orders.js';
 import appointmentsRoutes from './routes/appointments.js';
+
+const agentLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please wait a moment before trying again.' },
+  statusCode: 429,
+});
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -142,7 +152,7 @@ app.get('/api/analytics', async (_req, res, next) => {
   } catch (err) { next(err); }
 });
 
-app.use('/api/agent', agentRoutes);
+app.use('/api/agent', agentLimiter, agentRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/appointments', appointmentsRoutes);
