@@ -146,7 +146,7 @@ export default function AgentTerminal({ onDataChange, onClose }) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#F8F9FA] border-l border-[#E5E7EB]">
+    <div className="flex flex-col h-full bg-[#F8F9FA]">
       {/* Header */}
       <div className="shrink-0 flex items-center gap-2.5 px-4 h-14 border-b border-[#E5E7EB] bg-white">
         <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center">

@@ -136,36 +136,41 @@ export default function App() {
             <Route path="/analytics"    element={<AnalyticsPage />} />
           </Routes>
         </main>
-
-        <AnimatePresence>
-          {terminalOpen && !isMobile && (
-            <motion.div
-              key="terminal-desktop"
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: 400, opacity: 1 }}
-              exit={{ width: 0, opacity: 0 }}
-              transition={{ type: 'spring', damping: 30, stiffness: 280 }}
-              className="shrink-0 overflow-hidden"
-            >
-              <AgentTerminal onDataChange={handleDataChange} />
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
 
-      {/* Mobile terminal — full-screen slide-up */}
+      {/* ── Floating agent panel ── */}
       <AnimatePresence>
-        {terminalOpen && isMobile && (
-          <motion.div
-            key="terminal-mobile"
-            initial={{ y: '100%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '100%' }}
-            transition={{ type: 'spring', damping: 30, stiffness: 280 }}
-            className="fixed inset-0 z-50 flex flex-col"
-          >
-            <AgentTerminal onDataChange={handleDataChange} onClose={() => setTerminalOpen(false)} />
-          </motion.div>
+        {terminalOpen && (
+          <>
+            {/* Transparent backdrop — click outside to close */}
+            <motion.div
+              key="agent-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="fixed inset-0 z-40"
+              onClick={() => setTerminalOpen(false)}
+            />
+
+            {/* Panel */}
+            <motion.div
+              key="agent-panel"
+              initial={isMobile ? { y: '100%' } : { opacity: 0, y: -8 }}
+              animate={isMobile ? { y: 0 }      : { opacity: 1, y: 0 }}
+              exit={isMobile    ? { y: '100%' } : { opacity: 0, y: -8 }}
+              transition={isMobile
+                ? { type: 'spring', damping: 30, stiffness: 280 }
+                : { duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className={`fixed z-50 flex flex-col overflow-hidden bg-white shadow-[0_8px_32px_rgba(0,0,0,0.12)] ${
+                isMobile
+                  ? 'bottom-0 left-0 right-0 h-[75vh] rounded-t-xl border-t border-[#E5DDD0]'
+                  : 'top-[104px] right-4 w-[420px] h-[70vh] rounded-xl border border-[#E5DDD0]'
+              }`}
+            >
+              <AgentTerminal onDataChange={handleDataChange} onClose={() => setTerminalOpen(false)} />
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </div>
