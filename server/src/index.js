@@ -11,6 +11,7 @@ import { parseSearchQuery } from './agent/gemini.js';
 import inventoryRoutes from './routes/inventory.js';
 import ordersRoutes from './routes/orders.js';
 import appointmentsRoutes from './routes/appointments.js';
+import { checkDailyLimit } from './middleware/usageLimit.js';
 
 const agentLimiter = rateLimit({
   windowMs: 60 * 1000,
@@ -152,7 +153,7 @@ app.get('/api/analytics', async (_req, res, next) => {
   } catch (err) { next(err); }
 });
 
-app.use('/api/agent', agentLimiter, agentRoutes);
+app.use('/api/agent', agentLimiter, checkDailyLimit, agentRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/appointments', appointmentsRoutes);
