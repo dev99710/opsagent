@@ -80,8 +80,8 @@ export default function App() {
         onReconnect={recheck}
       />
 
-      {/* ── Tab nav ── */}
-      <div className="shrink-0 border-b border-[#E5DDD0] bg-white px-4 sm:px-6 z-10">
+      {/* ── Tab nav (desktop only) ── */}
+      <div className="hidden md:block shrink-0 border-b border-[#E5DDD0] bg-white px-4 sm:px-6 z-10">
         <nav className="flex items-center overflow-x-auto scrollbar-none -mb-px">
           {NAV.map(({ to, icon: Icon, label, end }) => (
             <NavLink
@@ -127,7 +127,7 @@ export default function App() {
 
       {/* ── Main content ── */}
       <div className="flex flex-1 overflow-hidden">
-        <main className="flex flex-1 overflow-hidden min-w-0">
+        <main className="flex flex-1 overflow-hidden min-w-0 pb-[56px] md:pb-0">
           <Routes>
             <Route path="/"             element={<Dashboard />} />
             <Route path="/inventory"    element={<InventoryPage />} />
@@ -137,6 +137,49 @@ export default function App() {
           </Routes>
         </main>
       </div>
+
+      {/* ── Bottom nav bar (mobile only) ── */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 h-14 bg-white border-t border-[#E5DDD0] flex items-stretch">
+        {NAV.map(({ to, icon: Icon, label, end }) => (
+          <NavLink
+            key={to}
+            to={to}
+            end={end}
+            className={({ isActive }) =>
+              `flex flex-col items-center justify-center flex-1 gap-0.5 transition-colors ${
+                isActive ? 'text-indigo-600' : 'text-[#A8927D]'
+              }`
+            }
+          >
+            {({ isActive }) => (
+              <>
+                <div className="relative">
+                  <Icon size={20} strokeWidth={isActive ? 2.5 : 1.8} />
+                  {label === 'Inventory' && lowStockCount > 0 && (
+                    <span className="absolute -top-1 -right-1.5 bg-red-500 text-white text-[8px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center leading-none">
+                      {lowStockCount > 9 ? '9+' : lowStockCount}
+                    </span>
+                  )}
+                </div>
+                <span className="text-[10px] font-medium leading-none">{label}</span>
+              </>
+            )}
+          </NavLink>
+        ))}
+      </nav>
+
+      {/* ── Agent FAB (mobile only) ── */}
+      <button
+        onClick={() => setTerminalOpen(v => !v)}
+        className={`md:hidden fixed z-30 bottom-[70px] right-4 w-12 h-12 rounded-full flex items-center justify-center shadow-[0_4px_16px_rgba(79,70,229,0.35)] transition-all ${
+          terminalOpen
+            ? 'bg-indigo-700 scale-95'
+            : 'bg-indigo-600 hover:bg-indigo-700 active:scale-95'
+        }`}
+        aria-label="Open Agent"
+      >
+        <Terminal size={20} className="text-white" strokeWidth={2} />
+      </button>
 
       {/* ── Floating agent panel ── */}
       <AnimatePresence>
