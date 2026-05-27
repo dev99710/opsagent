@@ -219,6 +219,8 @@ const COLS = [
 
 /* ── Page ────────────────────────────────────────────────── */
 export default function InventoryPage() {
+  useEffect(() => { document.title = 'Inventory — OpsAgent'; }, []);
+
   const [items,     setItems]     = useState([]);
   const [loading,   setLoading]   = useState(true);
   const [search,    setSearch]    = useState('');

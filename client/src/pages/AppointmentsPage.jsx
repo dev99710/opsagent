@@ -41,6 +41,8 @@ const STATUS_DOT = {
 };
 
 export default function AppointmentsPage() {
+  useEffect(() => { document.title = 'Appointments — OpsAgent'; }, []);
+
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState(() => typeof window !== 'undefined' && window.innerWidth < 640 ? 'list' : 'week');

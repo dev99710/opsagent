@@ -98,6 +98,8 @@ function KPICard({ label, raw, fmt, icon: Icon, color, sub, trend, delay = 0 }) 
 
 /* ── Main component ─────────────────────────────────────── */
 export default function Dashboard() {
+  useEffect(() => { document.title = 'Dashboard — OpsAgent'; }, []);
+
   const [data,          setData]          = useState(null);
   const [loading,       setLoading]       = useState(true);
   const [toast,         setToast]         = useState(null);

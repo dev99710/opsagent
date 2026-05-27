@@ -63,6 +63,8 @@ function SkeletonCard() {
 }
 
 export default function OrdersPage() {
+  useEffect(() => { document.title = 'Orders — OpsAgent'; }, []);
+
   const [orders,   setOrders]   = useState([]);
   const [loading,  setLoading]  = useState(true);
   const [selected, setSelected] = useState(null);

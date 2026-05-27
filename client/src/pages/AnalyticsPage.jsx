@@ -43,6 +43,8 @@ function ChartCard({ title, subtitle, children }) {
 }
 
 export default function AnalyticsPage() {
+  useEffect(() => { document.title = 'Analytics — OpsAgent'; }, []);
+
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
